@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Desempenho Escolar no Brasil — Projeto G1</title>
+<style>
+:root{--bg:#f6f8fb;--card:#fff;--tx:#1f2937;--mut:#6b7280;--pri:#1d4ed8;--acc:#0f766e;--bd:#e5e7eb}
+@media(prefers-color-scheme:dark){:root{--bg:#0f172a;--card:#1e293b;--tx:#e5e7eb;--mut:#9ca3af;--pri:#60a5fa;--acc:#2dd4bf;--bd:#334155}}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--tx);line-height:1.6}
+header{background:linear-gradient(135deg,#1e3a8a,#0f766e);color:#fff;padding:64px 20px;text-align:center}
+header h1{margin:0 0 8px;font-size:clamp(1.8rem,5vw,2.8rem)}header p{margin:4px auto;max-width:720px;opacity:.92}
+.btns{margin-top:24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{background:#fff;color:#1e3a8a;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:600}
+.btn.o{background:transparent;color:#fff;border:2px solid #fff}
+nav{position:sticky;top:0;background:var(--card);border-bottom:1px solid var(--bd);display:flex;gap:18px;justify-content:center;flex-wrap:wrap;padding:10px;z-index:5}
+nav a{color:var(--tx);text-decoration:none;font-size:.9rem}nav a:hover{color:var(--pri)}
+main{max-width:1000px;margin:auto;padding:0 20px 40px}section{margin-top:48px}
+h2{color:var(--pri);border-bottom:2px solid var(--bd);padding-bottom:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px}
+.kpi{text-align:center}.kpi b{display:block;font-size:1.9rem;color:var(--acc)}.kpi span{color:var(--mut);font-size:.85rem}
+figure{margin:20px 0;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px}
+figure img{width:100%;height:auto;border-radius:8px;background:#fff}figcaption{color:var(--mut);font-size:.9rem;margin-top:8px}
+.tag{display:inline-block;background:var(--bd);border-radius:999px;padding:3px 12px;margin:3px;font-size:.85rem}
+.warn{background:#fef3c7;color:#78350f;border-left:4px solid #f59e0b;padding:12px 16px;border-radius:8px}
+pre{background:#111827;color:#e5e7eb;padding:14px;border-radius:8px;overflow-x:auto;font-size:.85rem}
+footer{text-align:center;color:var(--mut);padding:30px 20px;font-size:.9rem}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎓 Desempenho Escolar no Brasil</h1>
+  <p>Análise e visualização de dados com Python: notas, aprovação e reprovação por região, rede de ensino, disciplina e ano (2015–2024).</p>
+  <p><small>Avaliação G1 · Linguagem de Programação — Análise e Visualização de Dados com Python · Aluno: <b>SEU NOME AQUI</b></small></p>
+  <div class="btns">
+    <a class="btn" href="https://SEU-APP.streamlit.app" target="_blank" rel="noopener">📊 Abrir dashboard</a>
+    <a class="btn o" href="https://github.com/SEU-USUARIO/projeto-g1" target="_blank" rel="noopener">💻 Repositório GitHub</a>
+  </div>
+</header>
+<nav>
+  <a href="#problema">Problema</a><a href="#base">Base de dados</a><a href="#tratamento">Tratamento</a>
+  <a href="#kpis">KPIs</a><a href="#graficos">Gráficos</a><a href="#dashboard">Dashboard</a>
+  <a href="#conclusao">Conclusão</a><a href="#tecnologias">Tecnologias</a>
+</nav>
+<main>
+<section id="problema">
+  <h2>1. Problema</h2>
+  <p>Como o desempenho escolar varia entre regiões, redes de ensino (pública × privada), disciplinas e ao longo do tempo? Renda familiar e acesso à internet estão associados às notas? E a base de dados é confiável?</p>
+  <p class="warn">⚠️ A base é uma <b>simulação</b>. Os resultados servem para praticar análise de dados e não representam estatísticas oficiais da educação brasileira.</p>
+</section>
+
+<section id="base">
+  <h2>2. Base de dados</h2>
+  <div class="grid">
+    <div class="card kpi"><b>740</b><span>registros semestrais</span></div>
+    <div class="card kpi"><b>37</b><span>municípios</span></div>
+    <div class="card kpi"><b>20</b><span>UFs · 5 regiões</span></div>
+    <div class="card kpi"><b>2015–2024</b><span>20 semestres</span></div>
+  </div>
+  <p>Variáveis: região, UF, município, rede de ensino, disciplina, média das notas, taxas de aprovação e reprovação, acesso à internet, renda média familiar, índice e nível de desempenho.</p>
+</section>
+
+<section id="tratamento">
+  <h2>3. Tratamento e engenharia de atributos</h2>
+  <ul>
+    <li>Sem valores nulos ou duplicados; tipos convertidos (datas, categorias).</li>
+    <li><b>39,3% dos registros</b> (291) têm aprovação + reprovação acima de 100% → sinalizados em <code>taxas_inconsistentes</code> (o dashboard permite excluí-los).</li>
+    <li>O <code>nivel_desempenho</code> original <b>não acompanha</b> o índice → criado <code>nivel_calculado</code> por quartis.</li>
+    <li>Novos atributos: período, flag de pandemia (2020–2021), faixas de renda e de internet, coordenadas dos municípios.</li>
+  </ul>
+</section>
+
+<section id="kpis">
+  <h2>4. KPIs</h2>
+  <div class="grid">
+    <div class="card kpi"><b>65,0</b><span>média das notas</span></div>
+    <div class="card kpi"><b>77,4%</b><span>taxa de aprovação</span></div>
+    <div class="card kpi"><b>18,4%</b><span>taxa de reprovação</span></div>
+    <div class="card kpi"><b>67,4%</b><span>acesso à internet</span></div>
+    <div class="card kpi"><b>R$ 3.742</b><span>renda média familiar</span></div>
+  </div>
+</section>
+
+<section id="graficos">
+  <h2>5. Principais gráficos</h2>
+  <figure><img src="imagens/01_distribuicoes.png" alt="Distribuição das notas e taxas"><figcaption>Notas e taxas se espalham amplamente, sem concentração em torno da média.</figcaption></figure>
+  <figure><img src="imagens/02_disciplina_rede.png" alt="Notas por disciplina e rede"><figcaption>Matemática (66,0) lidera e Português (63,1) tem a menor média; rede pública e privada praticamente iguais (65,0 × 64,9).</figcaption></figure>
+  <figure><img src="imagens/03_evolucao_temporal.png" alt="Evolução temporal"><figcaption>A média oscila entre 62,4 (2018) e 67,9 (2023), sem tendência clara e sem efeito visível da pandemia.</figcaption></figure>
+  <figure><img src="imagens/04_regioes.png" alt="Regiões"><figcaption>Centro-Oeste (68,8) à frente e Norte (63,2) com a menor média.</figcaption></figure>
+  <figure><img src="imagens/05_correlacao.png" alt="Matriz de correlação"><figcaption>Todas as correlações ficam próximas de zero — renda e internet não explicam as notas nesta base.</figcaption></figure>
+</section>
+
+<section id="dashboard">
+  <h2>6. Dashboard interativo (Streamlit)</h2>
+  <ul>
+    <li><b>Filtros múltiplos:</b> região, UF, rede, disciplina, período e exclusão de taxas inconsistentes.</li>
+    <li><b>KPIs dinâmicos</b> com comparação contra a base completa.</li>
+    <li><b>Análise temporal</b> com média móvel ajustável e destaque da pandemia.</li>
+    <li><b>Mapa interativo</b> (Plotly) dos municípios e <b>correlação estatística</b> (Pearson + p-valor + regressão).</li>
+    <li><b>Banco de dados relacional</b> SQLite com SQLAlchemy (municípios 1—N desempenho).</li>
+  </ul>
+  <p><a class="btn" style="background:var(--pri);color:#fff" href="https://SEU-APP.streamlit.app" target="_blank" rel="noopener">Abrir dashboard →</a></p>
+</section>
+
+<section id="conclusao">
+  <h2>7. Conclusão</h2>
+  <p>O desempenho médio é de 65 pontos, com diferenças pequenas entre disciplinas, redes e regiões e <b>nenhuma relação estatística relevante</b> entre renda, internet e notas (r ≈ 0,01). Não há tendência temporal nem efeito da pandemia.</p>
+  <p>Esses padrões refletem a natureza <b>simulada</b> da base. Com dados reais (INEP, IDEB, SAEB), espera-se associação positiva entre renda, conectividade e desempenho.</p>
+</section>
+
+<section id="tecnologias">
+  <h2>8. Tecnologias</h2>
+  <span class="tag">Python</span><span class="tag">Pandas</span><span class="tag">NumPy</span><span class="tag">Matplotlib</span><span class="tag">Seaborn</span><span class="tag">Plotly</span><span class="tag">SciPy</span><span class="tag">SQLAlchemy + SQLite</span><span class="tag">Streamlit</span><span class="tag">GitHub / GitHub Pages</span>
+  <pre>pip install -r requirements.txt
+streamlit run app.py</pre>
+</section>
+</main>
+<footer>Projeto G1 — Análise e Visualização de Dados com Python · <b>SEU NOME AQUI</b></footer>
+</body>
+</html>
