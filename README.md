@@ -9,8 +9,11 @@ Projeto de análise e visualização de dados (Python + Pandas + Matplotlib + Se
 > ⚠️ A base é **simulada** — os resultados não representam estatísticas oficiais.
 
 ## Dados
-Discplina: Linguagem de Programação
+
+Disciplina: Linguagem de Programação
+
 Professor: Alexandre Neves Louzada
+
 Nome Aluna: Júlia Agualuza Barboza
 
 ## Problema
