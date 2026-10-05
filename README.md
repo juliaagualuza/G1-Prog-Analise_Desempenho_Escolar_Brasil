@@ -8,6 +8,11 @@ Projeto de análise e visualização de dados (Python + Pandas + Matplotlib + Se
 
 > ⚠️ A base é **simulada** — os resultados não representam estatísticas oficiais.
 
+## Dados
+Discplina: Linguagem de Programação
+Professor: Alexandre Neves Louzada
+Nome Aluna: Júlia Agualuza Barboza
+
 ## Problema
 Como o desempenho escolar varia entre regiões, redes de ensino, disciplinas e anos? Renda e acesso à internet estão associados às notas?
 
